@@ -2,6 +2,7 @@ import React from "react";
 
 import "components/Application.scss";
 import Button from "./Button";
+import DayListItem from "./DayListItem";
 
 export default function Application(props) {
   return (
@@ -26,6 +27,8 @@ export default function Application(props) {
       </section>
       <section className="schedule">
         {/* Replace this with the schedule elements durint the "The Scheduler" activity. */}
+
+        <DayListItem />
         
       </section>
     </main>
