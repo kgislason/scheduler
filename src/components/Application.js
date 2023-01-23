@@ -1,6 +1,7 @@
 import React from "react";
 
 import "components/Application.scss";
+import Button from "./Button";
 
 export default function Application(props) {
   return (
@@ -13,7 +14,10 @@ export default function Application(props) {
           alt="Interview Scheduler"
         />
         <hr className="sidebar__separator sidebar--centered" />
-        <nav className="sidebar__menu"></nav>
+        <nav className="sidebar__menu">
+        
+        </nav>
+        <Button />
         <img
           className="sidebar__lhl sidebar--centered"
           src="images/lhl.png"
@@ -22,6 +26,7 @@ export default function Application(props) {
       </section>
       <section className="schedule">
         {/* Replace this with the schedule elements durint the "The Scheduler" activity. */}
+        
       </section>
     </main>
   );
