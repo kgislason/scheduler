@@ -62,8 +62,8 @@ export default function Application(props) {
         {/* Replace this with the schedule elements durint the "The Scheduler" activity. */}
         <InterviewerList
           interviewers={interviewers}
-          interviewer={interviewer}
-          setInterviewer={setInterviewer}
+          value={interviewer}
+          onChange={setInterviewer}
         />
 
       </section>
