@@ -35,6 +35,11 @@ export default function Application(props) {
   const [day, setDay] = useState("Monday");
   const [interviewer, setInterviewer] = useState(2);
 
+  const onChange = (id) => {
+    console.log("Fired onChange");
+    setInterviewer(id);
+  }
+
   return (
     <main className="layout">
       <section className="sidebar">
@@ -63,7 +68,7 @@ export default function Application(props) {
         <InterviewerList
           interviewers={interviewers}
           value={interviewer}
-          onChange={setInterviewer}
+          onChange={onChange}
         />
 
       </section>
