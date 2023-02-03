@@ -55,12 +55,23 @@ const appointments = {
 };
 
 export default function Application(props) {
-  const [day, setDay] = useState("Monday");
-  const [days, setDays] = useState([]);
-  const [interviewer, setInterviewer] = useState(2);
+  // const [day, setDay] = useState("Monday");
+  // const [days, setDays] = useState([]);
+  // const [interviewer, setInterviewer] = useState(2);
+  const setDay = day => setState({ ...state, day });
+  const setDays = (days) => {
+    setState(prev => ({ ...prev, days }));
+  };
+  const setInterviewer = (interviewer) => setState({...state, interviewer});
+
+  const [state, setState] = useState({
+    day: "Monday",
+    days: [],
+    appointments: {},
+    interviewer: 2
+  });
 
   const onChange = (id) => {
-    console.log("Fired onChange");
     setInterviewer(id);
   }
 
@@ -94,9 +105,9 @@ export default function Application(props) {
         <hr className="sidebar__separator sidebar--centered" />
         <nav className="sidebar__menu">
           <DayList
-            days={days}
-            value={day}
-            onChange={setDay}
+            days={state.days}
+            value={state.day}
+            setDay={setDay}
           />
         </nav>
         <img
@@ -112,7 +123,7 @@ export default function Application(props) {
         <Appointment key="last" time="5pm" />
         <InterviewerList
           interviewers={interviewers}
-          value={interviewer}
+          value={state.interviewer}
           onChange={onChange}
         />  
       </section>
