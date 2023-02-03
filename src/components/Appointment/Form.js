@@ -21,9 +21,9 @@ export default function Form(props) {
     setStudent(e.target.value);
   }
 
-  const handleInterviewer = (e) => {
-    console.log('Event', e);
-  }
+  // const handleInterviewer = (e) => {
+  //   console.log('Event', e);
+  // }
 
   return(
     <main className="appointment__card appointment__card--create">
