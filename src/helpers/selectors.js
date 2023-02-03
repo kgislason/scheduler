@@ -17,3 +17,21 @@ export function getAppointmentsForDay(state, day) {
   }
   return output;
 }
+
+export function getInterview(state, interview) {
+  // Start with the interview object
+  const output = interview;
+
+  // Take the id and rewrtie to be an object with interviewer data
+  if ( !interview ) {
+    return null;
+  }
+  const interviewerID = output.interviewer;
+
+  for (let item of Object.keys(state.interviewers)) {
+    if (state.interviewers[item]["id"] === interviewerID) {
+      output.interviewer = state.interviewers[item];
+      return output;
+    }
+  }
+}
