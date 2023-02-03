@@ -6,6 +6,11 @@ export default function useVisualMode(initial) {
 
   function transition(newMode, replace = false) {
     let arr = history;
+
+    if (replace) {
+      arr.pop();
+    }
+
     arr.push(newMode);
     setHistory(arr);
     setMode(newMode);
