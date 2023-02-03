@@ -23,7 +23,7 @@ export default function Application(props) {
     interviewer: 2,
     days: [],
     appointments: {},
-    interviewers: {}    
+    interviewers: []    
   });
 
   const onChange = (id) => setInterviewer(id);
