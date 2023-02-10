@@ -6,7 +6,8 @@ import DayList from "./DayList";
 import {getAppointmentsForDay, getInterview, getInterviewersForDay} from 'helpers/selectors';
 
 export default function Application(props) {
-  
+
+  // UseState
   const [state, setState] = useState({
     day: "Monday",
     days: [],
@@ -26,21 +27,13 @@ export default function Application(props) {
     });
   };
 
-  const dailyAppointments = getAppointmentsForDay(state, state.day);
-  const dailyInterviewers = getInterviewersForDay(state, state.day);
-  const allAppointments = dailyAppointments.map( appt => {
-    const interview = getInterview(state, appt.interview);
-    return(
-      <Appointment
-        key={appt.id}
-        id={appt.id}
-        time={appt.time}
-        interview={interview}
-        interviewers={dailyInterviewers}
-        bookInterview={bookInterview}
-      />
-    )
-  });
+  /**
+   * bookInterview
+   *
+   * @param {*} id 
+   * @param {*} interview 
+   * @returns a promise from axios put request to add new interview appointment
+   */
 
   function bookInterview(id, interview) {
     const appointment = {
@@ -56,7 +49,9 @@ export default function Application(props) {
     return axios.put(`http://localhost:8001/api/appointments/${id}`, appointment)
     .then((res) => {
       console.log(res);
-
+    })
+    .then((data) => {
+      console.log(data);
       setState({
         ...state,
         appointments
@@ -65,8 +60,63 @@ export default function Application(props) {
     .catch( (err) => {
       console.log("Error: ", err);
     });
-  }  
+  }
 
+  /**
+   * Cancel Interview (Delete)
+   * 
+   * Description: uses the appointment id to find the right appointment slot 
+   * and set it's interview data to null.
+   * 
+   * @param {*} id 
+   * @returns a promise send to axios delete
+   */
+
+  const cancelInterview = (id) => {
+    const appointment = {
+      ...state.appointments[id],
+      interview: null
+    };
+
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment
+    };
+
+    console.log(appointments);
+
+    return axios.delete(`http://localhost:8001/api/appointments/${id}`)
+      .then((res) => {
+        console.log(res);
+
+        setState({
+          ...state,
+          appointments
+        });
+      })
+      .catch( (err) => {
+        console.log("Error: ", err);
+      });
+  }
+
+  const dailyAppointments = getAppointmentsForDay(state, state.day);
+  const dailyInterviewers = getInterviewersForDay(state, state.day);
+  const allAppointments = dailyAppointments.map( appt => {
+    const interview = getInterview(state, appt.interview);
+    return(
+      <Appointment
+        key={appt.id}
+        id={appt.id}
+        time={appt.time}
+        interview={interview}
+        interviewers={dailyInterviewers}
+        bookInterview={bookInterview}
+        cancelInterview={cancelInterview}
+      />
+    )
+  });
+
+  
   useEffect( () => {
     Promise.all([
       axios.get('http://localhost:8001/api/days'),
