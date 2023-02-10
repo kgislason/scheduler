@@ -3,33 +3,56 @@ import axios from 'axios';
 import "./Application.scss";
 import Appointment from "./Appointment";
 import DayList from "./DayList";
-import InterviewerList from "./InterviewerList";
-import {getAppointmentsForDay, getInterview} from 'helpers/selectors';
-
-const interviewers = [
-  { id: 1, name: "Sylvia Palmer", avatar: "https://i.imgur.com/LpaY82x.png"},
-  { id: 2, name: "Tori Malcolm", avatar: "https://i.imgur.com/Nmx0Qxo.png"},
-  { id: 3, name: "Mildred Nazir", avatar: "https://i.imgur.com/T2WwVfS.png"},
-  { id: 4, name: "Cohana Roy", avatar: "https://i.imgur.com/FK8V841.jpg"},
-  { id: 5, name: "Sven Jones", avatar: "https://i.imgur.com/twYrpay.jpg"}
-];
+import {getAppointmentsForDay, getInterview, getInterviewersForDay} from 'helpers/selectors';
 
 export default function Application(props) {
-  const setDay = day => setState({ ...state, day });
-  const setInterviewer = (interviewer) => setState({...state, interviewer});
-
+  
   const [state, setState] = useState({
     day: "Monday",
-    interviewer: 2,
     days: [],
     appointments: {},
-    interviewers: []    
+    interviewers: [],
+    saved: false
   });
 
-  const onChange = (id) => setInterviewer(id);
+  // Functions
+  function setDay(day) {
+    let dailyInterviewers = getInterviewersForDay(state, day);
+    setState({ 
+      ...state, 
+      appointments: {...state.appointments},
+      interviewers: dailyInterviewers,
+      day
+    });
+  };
+
+  function bookInterview(id, interview) {
+    const appointment = {
+      ...state.appointments[id],
+      interview: { ...interview }
+    };
+
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment
+    };
+
+    setState({
+      ...state,
+      appointments
+    });
+    
+    axios.put(`http://localhost:8001/api/appointments/${id}`, appointment)
+    .then((res) => {
+      console.log('Save form: ', res);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  }
 
   const dailyAppointments = getAppointmentsForDay(state, state.day);
-
+  const dailyInterviewers = getInterviewersForDay(state, state.day);
   const allAppointments = dailyAppointments.map( appt => {
     const interview = getInterview(state, appt.interview);
     return(
@@ -38,6 +61,8 @@ export default function Application(props) {
         id={appt.id}
         time={appt.time}
         interview={interview}
+        interviewers={dailyInterviewers}
+        bookInterview={bookInterview}
       />
     )
   });
@@ -52,7 +77,7 @@ export default function Application(props) {
     }).catch( (err) => {
       console.log(err.message);
     });
-  }, []);
+  }, [state.day]);
 
   return (
     <main className="layout">
@@ -77,19 +102,15 @@ export default function Application(props) {
           alt="Lighthouse Labs"
         />
 
-          
       </section>
       <section className="schedule">
         {allAppointments}
         <Appointment 
           key="last"
           time="5pm"
-        />
-        <InterviewerList
-          interviewers={interviewers}
+          interviewers={state.interviewers}
           value={state.interviewer}
-          onChange={onChange}
-        />  
+        />
       </section>
     </main>
     
