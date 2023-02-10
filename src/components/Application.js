@@ -26,31 +26,6 @@ export default function Application(props) {
     });
   };
 
-  function bookInterview(id, interview) {
-    const appointment = {
-      ...state.appointments[id],
-      interview: { ...interview }
-    };
-
-    const appointments = {
-      ...state.appointments,
-      [id]: appointment
-    };
-
-    setState({
-      ...state,
-      appointments
-    });
-    
-    axios.put(`http://localhost:8001/api/appointments/${id}`, appointment)
-    .then((res) => {
-      console.log('Save form: ', res);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-  }
-
   const dailyAppointments = getAppointmentsForDay(state, state.day);
   const dailyInterviewers = getInterviewersForDay(state, state.day);
   const allAppointments = dailyAppointments.map( appt => {
@@ -66,6 +41,31 @@ export default function Application(props) {
       />
     )
   });
+
+  function bookInterview(id, interview) {
+    const appointment = {
+      ...state.appointments[id],
+      interview: { ...interview }
+    };
+
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment
+    };
+
+    setState({
+      ...state,
+      appointments
+    });
+
+    axios.put(`http://localhost:8001/api/appointments/${id}`, appointment)
+    .then((res) => {
+      console.log(res);
+    })
+    .catch( (err) => {
+      console.log("Error: ", err);
+    });
+  }
 
   useEffect( () => {
     Promise.all([

@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React from "react";
 import './styles.scss';
 import Header from "./Header";
 import Empty from "./Empty";
@@ -19,13 +19,22 @@ export default function Appointment(props) {
     props.interview ? SHOW : EMPTY
   );
 
-  function save(name, interviewer) {
+  let student = props.interview ? props.interview.student : '';
+  let interviewer = props.interview ? props.interview.interviewer.id : '';
+
+  const save = (name, interviewer) => {
     const interview = {
       student: name,
       interviewer
     };
 
-    props.bookInterview(props.id, interview);
+    transition(SAVING);
+
+    //props.bookInterview(props.id, interview);
+
+    setTimeout( () => {
+      transition(SHOW);
+    }, 3000);
   }
 
   return (
@@ -44,11 +53,11 @@ export default function Appointment(props) {
         {mode === CREATE && (
           <Form
             id={props.id}
-            student={props.interview.student}
-            interviewer={props.interview.interviewer}
             interviewers={props.interviewers}
             onCancel={ () => back(EMPTY)}
             save={save}
+            student={student}
+            interviewer={interviewer}
           />
         )}
         {mode === SAVING && (
