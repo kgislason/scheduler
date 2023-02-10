@@ -19,9 +19,6 @@ export default function Appointment(props) {
     props.interview ? SHOW : EMPTY
   );
 
-  let student = props.interview ? props.interview.student : '';
-  let interviewer = props.interview ? props.interview.interviewer.id : '';
-
   const save = (name, interviewer) => {
     const interview = {
       student: name,
@@ -30,11 +27,13 @@ export default function Appointment(props) {
 
     transition(SAVING);
 
-    //props.bookInterview(props.id, interview);
+    console.log(props.id, interview);
 
-    setTimeout( () => {
-      transition(SHOW);
-    }, 3000);
+    props.bookInterview(props.id, interview)
+      .then(() => {
+          transition(SHOW);
+        }
+      );
   }
 
   return (
@@ -43,7 +42,7 @@ export default function Appointment(props) {
           time={props.time}
         />
         {mode === EMPTY && <Empty onAdd={() => transition(CREATE)} />}
-        {mode === SHOW && (
+        {mode === SHOW && props.interview && (
           <Show
             student={props.interview.student}
             interviewer={props.interview.interviewer}
@@ -56,8 +55,6 @@ export default function Appointment(props) {
             interviewers={props.interviewers}
             onCancel={ () => back(EMPTY)}
             save={save}
-            student={student}
-            interviewer={interviewer}
           />
         )}
         {mode === SAVING && (

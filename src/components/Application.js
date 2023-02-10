@@ -53,19 +53,19 @@ export default function Application(props) {
       [id]: appointment
     };
 
-    setState({
-      ...state,
-      appointments
-    });
-
-    axios.put(`http://localhost:8001/api/appointments/${id}`, appointment)
+    return axios.put(`http://localhost:8001/api/appointments/${id}`, appointment)
     .then((res) => {
       console.log(res);
+
+      setState({
+        ...state,
+        appointments
+      });
     })
     .catch( (err) => {
       console.log("Error: ", err);
     });
-  }
+  }  
 
   useEffect( () => {
     Promise.all([
@@ -77,7 +77,7 @@ export default function Application(props) {
     }).catch( (err) => {
       console.log(err.message);
     });
-  }, [state.day]);
+  }, [state.days]);
 
   return (
     <main className="layout">
