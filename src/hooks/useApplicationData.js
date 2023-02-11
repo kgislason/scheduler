@@ -9,8 +9,7 @@ export function useApplicationData(initial) {
     day: "Monday",
     days: [],
     appointments: {},
-    interviewers: [],
-    saved: false
+    interviewers: []
   });
 
   // Functions
@@ -32,7 +31,7 @@ export function useApplicationData(initial) {
    * @returns a promise from axios put request to add new interview appointment
    */
 
-  const bookInterview = async(id, interview) => {
+  const bookInterview = async(id, interview, callback) => {
     const appointment = {
       ...state.appointments[id],
       interview: { ...interview }
@@ -43,15 +42,17 @@ export function useApplicationData(initial) {
       [id]: appointment
     };
 
-    return axios.put(`http://localhost:8001/api/appointments/${id}`, appointment)
-      .then((res) => {
-        setState({
-          ...state,
-          appointments
-        });
+    return axios.put(`http://localhost:8001/api/appointments/${id}`, appointment, () => {
+      setState({
+        ...state,
+        appointments
+      });
+    })
+      .then((response) => {
+        callback(response);
       })
-      .catch( (err) => {
-        console.log("Error: ", err.response);
+      .catch((err) => {
+        callback(err);
       });
   }
 
@@ -65,7 +66,7 @@ export function useApplicationData(initial) {
    * @returns a promise send to axios delete
    */
 
-  const cancelInterview = (id) => {
+  const cancelInterview = (id, callback) => {
     const appointment = {
       ...state.appointments[id],
       interview: null
@@ -76,15 +77,17 @@ export function useApplicationData(initial) {
       [id]: appointment
     };
 
-    return axios.delete(`http://localhost:8001/api/appointments/${id}`)
-      .then((res) => {
-        setState({
-          ...state,
-          appointments
-        });
+    return axios.delete(`http://localhost:8001/api/appointments/${id}`, () => {
+      setState({
+        ...state,
+        appointments
+      });
+    })
+      .then((response) => {
+        callback(response);
       })
-      .catch( (err) => {
-        console.log("Axios Call Error on delete: ", err);
+      .catch((err) => {
+        callback(err);
       });
   }
 
@@ -96,7 +99,7 @@ export function useApplicationData(initial) {
     ]).then((all) => {
       setState(prev => ({...prev, days: all[0].data, appointments: all[1].data,interviewers: all[2].data}));
     }).catch( (err) => {
-      console.log(err.message);
+      console.log("Error: ", err.message);
     });
   }, [state.days]);
 

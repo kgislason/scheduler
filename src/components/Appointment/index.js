@@ -34,17 +34,14 @@ export default function Appointment(props) {
 
     transition(SAVING);
 
-    props.bookInterview(props.id, interview)
-      .then((res) => {
-        console.log("Response: ", res);
-      })
-      .catch((err) => {
-        console.log("Error: ", err);
-        transition(ERROR_SAVE);
-      })
-      .finally(() => {
+    props.bookInterview(props.id, interview, (res) => {
+      console.log("Res", res);
+      if (res.status > 200 && res.status < 300) {
         transition(SHOW);
-      });
+      } else {
+        transition(ERROR_SAVE);
+      }
+    });      
   }
 
   const handleDelete = () => {
@@ -54,17 +51,14 @@ export default function Appointment(props) {
   const handleConfirmDelete = (id) => {
     transition(DELETING);
 
-    props.cancelInterview(id)
-      .then((res) => {   
-        console.log("Waiting");
-      })
-      .catch((err) => {
-        console.log("Error: ", err);
-        transition(ERROR_DELETE);        
-      }).finally((data) => {
-        console.log("Finally, ", data);
+    props.cancelInterview(id, (res) => {
+      console.log("Response: ", res);
+      if (res.status > 200 && res.status < 300) {
         transition(EMPTY);
-      });
+      } else {
+        transition(ERROR_DELETE);  
+      }
+    });
   }
 
   return (
