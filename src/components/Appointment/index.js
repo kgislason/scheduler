@@ -7,6 +7,7 @@ import Form from "./Form";
 import { useVisualMode } from '../../hooks/useVisualMode';
 import Status from "./Status";
 import Confirm from "./Confirm";
+import Error from "./Error";
 
 // Constants
 const EMPTY = "EMPTY";
@@ -16,6 +17,8 @@ const SAVING = "SAVING";
 const DELETING = "DELETING"
 const CONFIRM = "CONFIRM";
 const EDIT = "EDIT";
+const ERROR_SAVE = "ERROR_SAVE";
+const ERROR_DELETE = "ERROR_DELETE";
 
 export default function Appointment(props) {
 
@@ -32,7 +35,14 @@ export default function Appointment(props) {
     transition(SAVING);
 
     props.bookInterview(props.id, interview)
-      .then(() => {
+      .then((res) => {
+        console.log("Response: ", res);
+      })
+      .catch((err) => {
+        console.log("Error: ", err);
+        transition(ERROR_SAVE);
+      })
+      .finally(() => {
         transition(SHOW);
       });
   }
@@ -42,11 +52,19 @@ export default function Appointment(props) {
   }
 
   const handleConfirmDelete = (id) => {
-    transition(DELETING)
+    transition(DELETING);
+
     props.cancelInterview(id)
-    .then(() => {
-      transition(EMPTY);
-    });
+      .then((res) => {   
+        console.log("Waiting");
+      })
+      .catch((err) => {
+        console.log("Error: ", err);
+        transition(ERROR_DELETE);        
+      }).finally((data) => {
+        console.log("Finally, ", data);
+        transition(EMPTY);
+      });
   }
 
   return (
@@ -85,9 +103,21 @@ export default function Appointment(props) {
         {mode === SAVING && (
           <Status />
         )}
+        {mode === ERROR_SAVE && (
+          <Error
+            message="Error saving"
+            onClose={() => transition(EMPTY)}
+          />
+        )}
         {mode === DELETING && (
           <Status
             message="Deleting..."
+          />
+        )}
+        {mode === ERROR_DELETE && (
+          <Error
+            message="Error deleting..."
+            onClose={() => transition(SHOW)}
           />
         )}
         {mode === CONFIRM && (
