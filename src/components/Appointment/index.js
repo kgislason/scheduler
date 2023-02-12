@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import './styles.scss';
+import "./styles.scss";
 import Header from "./Header";
 import Empty from "./Empty";
 import Show from "./Show";
 import Form from "./Form";
-import { useVisualMode } from '../../hooks/useVisualMode';
+import { useVisualMode } from "../../hooks/useVisualMode";
 import Status from "./Status";
 import Confirm from "./Confirm";
 import Error from "./Error";
@@ -22,14 +22,17 @@ const ERROR_DELETE = "ERROR_DELETE";
 
 export default function Appointment(props) {
 
-  const [error, setError] = useState('');
+  // We set the error message if there is an error to pass to the <Error />
+  const [error, setError] = useState("");
 
+  // Manage how the user moves through the application
   const { mode, transition, back } = useVisualMode(
     props.interview ? SHOW : EMPTY
   );
 
+  // Handle Saving of the Form
   const save = (name, interviewer) => {
-    setError('');
+    setError("");
     const interview = {
       student: name,
       interviewer
@@ -60,9 +63,10 @@ export default function Appointment(props) {
     }
   }
 
+  // Handle Deleting of an appointment (after confirmation)
   const handleConfirmDelete = (id) => {
     transition(DELETING, true);
-    setError('Error: the server did not respond.');
+    setError("");
 
     props.cancelInterview(id, (res) => {      
       console.log("Response: ", res);
