@@ -30,11 +30,11 @@ export default function Form(props) {
     e.preventDefault();
   }
 
-  const onSave = (e) => {
+  const handleSave = (e) => {
     e.preventDefault();
-    console.log(student, interviewer);
-    
-    props.save(student, interviewer);
+    console.log("Student: ", student);
+    console.log("Interviewer: ", interviewer);
+    props.onSave(student, interviewer);
   }
 
   return(
@@ -59,7 +59,7 @@ export default function Form(props) {
       <section className="appointment__card-right">
         <section className="appointment__actions">
           <Button danger onClick={() => cancel()}>Cancel</Button>
-          <Button confirm onClick={onSave}>Save</Button>
+          <Button confirm onClick={handleSave}>Save</Button>
         </section>
       </section>
     </main>

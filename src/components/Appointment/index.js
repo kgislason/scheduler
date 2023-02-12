@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import './styles.scss';
 import Header from "./Header";
 import Empty from "./Empty";
@@ -22,41 +22,58 @@ const ERROR_DELETE = "ERROR_DELETE";
 
 export default function Appointment(props) {
 
+  const [error, setError] = useState('');
+
   const { mode, transition, back } = useVisualMode(
     props.interview ? SHOW : EMPTY
   );
 
   const save = (name, interviewer) => {
+    setError('');
     const interview = {
       student: name,
       interviewer
     };
 
-    transition(SAVING);
+    if (!name ) {
+      setError("You must enter a student name");
+      transition(ERROR_SAVE);
+    } else if (!interviewer) {
+      setError("You must select an interviewer.");
+      transition(ERROR_SAVE);
+    } else {
+      transition(SAVING, true);
 
-    props.bookInterview(props.id, interview, (res) => {
-      console.log("Res", res);
-      if (res.status > 200 && res.status < 300) {
-        transition(SHOW);
-      } else {
-        transition(ERROR_SAVE);
-      }
-    });      
-  }
-
-  const handleDelete = () => {
-    transition(CONFIRM);
+      // onComplete...
+      props.bookInterview(props.id, interview, (res) => {
+        console.log("Response: ", res);
+        if (res.status > 200 && res.status < 300) {
+          // Transition to show the new appointment
+          transition(SHOW);
+        } else {
+          let message = String(res);
+          setError(`${message}`);
+          // Show an error if sainv is not successful
+          transition(ERROR_SAVE, true);
+        }
+      });  
+    }
   }
 
   const handleConfirmDelete = (id) => {
-    transition(DELETING);
+    transition(DELETING, true);
+    setError('Error: the server did not respond.');
 
-    props.cancelInterview(id, (res) => {
+    props.cancelInterview(id, (res) => {      
       console.log("Response: ", res);
+      // Transition to empty spot if delete is successful
       if (res.status > 200 && res.status < 300) {
         transition(EMPTY);
       } else {
-        transition(ERROR_DELETE);  
+        // Otherwise show an error
+        let message = String(res);
+        setError(`${message}`);
+        transition(ERROR_DELETE, true);  
       }
     });
   }
@@ -73,15 +90,15 @@ export default function Appointment(props) {
             student={props.interview.student}
             interviewer={props.interview.interviewer}
             onEdit={() => transition(EDIT)}
-            onDelete={handleDelete}
+            onDelete={() => transition(CONFIRM)}
           />
         )}
         {mode === CREATE && (
           <Form
             id={props.id}
             interviewers={props.interviewers}
-            onCancel={ () => back(EMPTY)}
-            save={save}
+            onCancel={ () => back()}
+            onSave={save}
           />
         )}
         {mode === EDIT && (
@@ -90,17 +107,19 @@ export default function Appointment(props) {
             student={props.interview.student}
             interviewer={props.interview.interviewer.id}
             interviewers={props.interviewers}
-            onCancel={ () => back(SHOW)}
-            save={save}
+            onCancel={ () => back()}
+            onSave={save}
           />
         )}
         {mode === SAVING && (
-          <Status />
+          <Status
+            message="Saving"
+          />
         )}
         {mode === ERROR_SAVE && (
           <Error
-            message="Error saving"
-            onClose={() => transition(EMPTY)}
+            message={error}
+            onClose={() => back(EMPTY)}
           />
         )}
         {mode === DELETING && (
@@ -110,7 +129,7 @@ export default function Appointment(props) {
         )}
         {mode === ERROR_DELETE && (
           <Error
-            message="Error deleting..."
+            message={error}
             onClose={() => transition(SHOW)}
           />
         )}
@@ -118,7 +137,7 @@ export default function Appointment(props) {
           <Confirm 
             message="Are you sure you would like to delete?"
             onConfirm={() => handleConfirmDelete(props.id)}
-            onCancel={() => back(EMPTY)}
+            onCancel={() => back()}
           />
         )}
     </article>

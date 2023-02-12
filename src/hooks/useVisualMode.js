@@ -17,9 +17,13 @@ export function useVisualMode(initial) {
   }
 
   function back() {
-    if (mode === initial) return;
+    if (mode === initial) {
+      return;
+    }
+
+    // Continue if not on intial mode
     let arr = history;
-    arr.pop();
+    arr.pop()
     setHistory(arr);
     setMode(arr[arr.length-1]);
   }

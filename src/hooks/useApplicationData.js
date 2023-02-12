@@ -49,9 +49,16 @@ export function useApplicationData(initial) {
       });
     })
       .then((response) => {
+        // Send this reponse to the Appointmetn save() function
+        // to manage transition
         callback(response);
       })
       .catch((err) => {
+        if (err.response) {
+          console.log(err.response.data);
+          console.log(err.response.status);
+          console.log(err.response.headers);
+        }
         callback(err);
       });
   }
@@ -63,7 +70,7 @@ export function useApplicationData(initial) {
    * and set it's interview data to null.
    * 
    * @param {*} id 
-   * @returns a promise send to axios delete
+   * @returns a promise - delete appointment
    */
 
   const cancelInterview = (id, callback) => {
