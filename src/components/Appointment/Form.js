@@ -11,6 +11,7 @@ export default function Form(props) {
   const reset = () => {
     setStudent("");
     setInterviewer(null);
+    setError("");
   };
 
   const cancel = () => {
@@ -18,8 +19,7 @@ export default function Form(props) {
     props.onCancel();
   }
 
-  const onChange = (id) => { 
-    console.log(id);
+  const onChange = (id) => {
     setInterviewer(id);
   };
 
@@ -42,6 +42,7 @@ export default function Form(props) {
       return;
     } 
 
+    setError("");
     props.onSave(student, interviewer);
   }
 
