@@ -38,29 +38,20 @@ export default function Appointment(props) {
       interviewer
     };
 
-    if (!name ) {
-      setError("You must enter a student name");
-      transition(ERROR_SAVE);
-    } else if (!interviewer) {
-      setError("You must select an interviewer.");
-      transition(ERROR_SAVE);
-    } else {
-      transition(SAVING, true);
+    transition(SAVING, true);
 
-      // onComplete...
-      props.bookInterview(props.id, interview, (res) => {
-        console.log("Response: ", res);
-        if (res.status > 200 && res.status < 300) {
-          // Transition to show the new appointment
-          transition(SHOW);
-        } else {
-          let message = String(res);
-          setError(`${message}`);
-          // Show an error if sainv is not successful
-          transition(ERROR_SAVE, true);
-        }
-      });  
-    }
+    // onComplete...
+    props.bookInterview(props.id, interview, (res) => {
+      if (res.status > 200 && res.status < 300) {
+        // Transition to show the new appointment
+        transition(SHOW);
+      } else {
+        let message = String(res);
+        setError(`${message}`);
+        // Show an error if saving is not successful
+        transition(ERROR_SAVE, true);
+      }
+    });
   }
 
   // Handle Deleting of an appointment (after confirmation)
