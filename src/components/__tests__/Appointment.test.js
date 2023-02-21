@@ -11,4 +11,3 @@ describe("Appointment", () => {
     render(<Appointment time="4pm" />);
   });  
 });
-
