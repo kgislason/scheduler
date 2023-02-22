@@ -9,6 +9,7 @@ import Status from "./Status";
 import Confirm from "./Confirm";
 import Error from "./Error";
 
+
 // Constants
 const EMPTY = "EMPTY";
 const SHOW = "SHOW";
@@ -41,17 +42,11 @@ export default function Appointment(props) {
     transition(SAVING, true);
 
     // onComplete...
-    props.bookInterview(props.id, interview, (res) => {
-      if (res.status > 200 && res.status < 300) {
-        // Transition to show the new appointment
+    props.bookInterview(props.id, interview)
+      .then( (res) => {
+        console.log("Saved new inerview: ", res);
         transition(SHOW);
-      } else {
-        let message = String(res);
-        setError(`${message}`);
-        // Show an error if saving is not successful
-        transition(ERROR_SAVE, true);
-      }
-    });
+      });
   }
 
   // Handle Deleting of an appointment (after confirmation)
@@ -59,18 +54,14 @@ export default function Appointment(props) {
     transition(DELETING, true);
     setError("");
 
-    props.cancelInterview(id, (res) => {      
-     console.log("Response: ", res);
-      // Transition to empty spot if delete is successful
-      if (res.status > 200 && res.status < 300) {
-        transition(EMPTY);
-      } else {
-        // Otherwise show an error
-        let message = String(res);
-        setError(`${message}`);
-        transition(ERROR_DELETE, true);  
-      }
+    props.cancelInterview(id)
+    .then( (res) => {
+      console.log("Cancel Interview Response: ", res);
+      transition(EMPTY);
     });
+
+    // TO DO
+    // Handle ERRORS
   }
 
   return (

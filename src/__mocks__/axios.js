@@ -1,3 +1,5 @@
+import { useCallback } from "react";
+
 const fixtures = {
   days: [
     {
@@ -81,10 +83,15 @@ export default {
       });
     }
   }),
-  put: jest.fn( () => {
-    return Promise.resolve({
+  put: jest.fn( (url, data, callback) => {
+    if (url === "/api/appointments/1") {
+      return Promise.resolve({
         status: 204,
         statusText: "No Content",
-    });
+        data: data,
+        callback: callback
+      });
+    }
   })
 }
+

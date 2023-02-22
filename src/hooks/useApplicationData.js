@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { getInterviewersForDay } from "helpers/selectors";
 import axios from "axios";
 
 export function useApplicationData(initial) {
@@ -14,7 +13,6 @@ export function useApplicationData(initial) {
 
   // Functions
   function setDay(day) {
-    //let dailyInterviewers = getInterviewersForDay(state, day);
     setState({ 
       ...state,
       day
@@ -29,7 +27,7 @@ export function useApplicationData(initial) {
    * @returns a promise from axios put request to add new interview appointment
    */
 
-  const bookInterview = async(id, interview, callback) => {
+  const bookInterview = (id, interview) => {
     const appointment = {
       ...state.appointments[id],
       interview: { ...interview }
@@ -40,24 +38,18 @@ export function useApplicationData(initial) {
       [id]: appointment
     };
 
-    return axios.put(`/api/appointments/${id}`, appointment, () => {
-      setState({
-        ...state,
-        appointments
-      });
-    })
-      .then((response) => {
-        // Send this reponse to the Appointmetn save() function
-        // to manage transition
-        callback(response);
+    return axios.put(`/api/appointments/${id}`, appointment)
+      .then( (res) => {
+        console.log(res);
+        setState({
+          ...state,
+          appointments
+        });
+
+        return res;
       })
       .catch((err) => {
-        if (err.response) {
-          console.log(err.response.data);
-          console.log(err.response.status);
-          console.log(err.response.headers);
-        }
-        callback(err);
+        return err;
       });
   }
 
@@ -71,7 +63,7 @@ export function useApplicationData(initial) {
    * @returns a promise - delete appointment
    */
 
-  const cancelInterview = (id, callback) => {
+  const cancelInterview = (id) => {
     const appointment = {
       ...state.appointments[id],
       interview: null
@@ -82,17 +74,18 @@ export function useApplicationData(initial) {
       [id]: appointment
     };
 
-    return axios.delete(`/api/appointments/${id}`, () => {
-      setState({
-        ...state,
-        appointments
-      });
-    })
-      .then((response) => {
-        callback(response);
+    return axios.delete(`/api/appointments/${id}`)
+      .then((res) => {
+        setState({
+          ...state,
+          appointments
+        });
+        console.log(res);
+        return res;
       })
       .catch((err) => {
-        callback(err);
+        console.log(err);
+        return err;
       });
   }
 
