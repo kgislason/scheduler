@@ -14,11 +14,9 @@ export function useApplicationData(initial) {
 
   // Functions
   function setDay(day) {
-    let dailyInterviewers = getInterviewersForDay(state, day);
+    //let dailyInterviewers = getInterviewersForDay(state, day);
     setState({ 
-      ...state, 
-      appointments: {...state.appointments},
-      interviewers: dailyInterviewers,
+      ...state,
       day
     });
   };
@@ -109,8 +107,7 @@ export function useApplicationData(initial) {
     .catch((err) => {
       console.log("Error", err);
     });
-  }, [state.day]);
-  // Leave [state.days] to ensure everytime we go back to a day, the data still loads. If [] is used, then after returning to a day, data is empty
+  }, []);
 
   return {
     state,

@@ -1,7 +1,6 @@
 export function getAppointmentsForDay(state, day) {
   //... returns an array of appointments for that day
   const days = state.days;
-  const appointments = state.appointments;
   let apptIDs = [];
   const output = [];
   const selectedDay = days.filter( item => item["name"] === day );
@@ -10,11 +9,16 @@ export function getAppointmentsForDay(state, day) {
     apptIDs = selectedDay[0]["appointments"];
   }
 
-  for (let item in appointments) {
-    if (apptIDs.includes(Number(item))) {
-      output.push(appointments[item]);
-    }
+  for (const key of apptIDs) {
+    output.push(state.appointments[key]);
   }
+
+  // for (let item in appointments) {
+  //   if (apptIDs.includes(Number(item))) {
+  //     output.push(appointments[item]);
+  //   }
+  // }
+  console.log("Appt: ", day, output);
   return output;
 }
 
@@ -22,7 +26,7 @@ export function getInterview(state, interview) {
   // Start with the interview object
   const output = interview;
 
-  // Take the id and rewrtie to be an object with interviewer data
+  // Take the id and rewrite to be an object with interviewer data
   if ( !interview ) {
     return null;
   }
@@ -31,9 +35,9 @@ export function getInterview(state, interview) {
   for (let item of Object.keys(state.interviewers)) {
     if (state.interviewers[item]["id"] === interviewerID) {
       output.interviewer = state.interviewers[item];
-      return output;
     }
   }
+  return output;
 }
 
 export function getInterviewersForDay(state, day) {
@@ -48,10 +52,14 @@ export function getInterviewersForDay(state, day) {
     intIDs = selectedDay[0]["interviewers"];
   }
 
-  for (let ind in interviewers) {
-    if (intIDs.includes(Number(interviewers[ind]["id"]))) {
-      output.push(interviewers[ind]);
-    }
+  for (const key of intIDs) {
+    output.push(state.interviewers[key]);
   }
+
+  // for (let ind in interviewers) {
+  //   if (intIDs.includes(Number(interviewers[ind]["id"]))) {
+  //     output.push(interviewers[ind]);
+  //   }
+  // }
   return output;
 }
