@@ -60,7 +60,7 @@ export default function Appointment(props) {
     setError("");
 
     props.cancelInterview(id, (res) => {      
-      console.log("Response: ", res);
+     console.log("Response: ", res);
       // Transition to empty spot if delete is successful
       if (res.status > 200 && res.status < 300) {
         transition(EMPTY);
