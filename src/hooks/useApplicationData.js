@@ -60,10 +60,11 @@ export function useApplicationData(initial) {
           days
         });
 
-        return res;
+        return [true, res];
       })
       .catch((err) => {
-        return err;
+        console.log("This: ", err);
+        return [false, err];
       });
   }
 
@@ -110,10 +111,19 @@ export function useApplicationData(initial) {
           appointments,
           days
         });
-        return res;
+        if (res !== undefined) {
+          return [true, res];
+        } else {
+          return [true, "Response ok."]
+        }
       })
       .catch((err) => {
-        return err;
+        if (err !== undefined) {
+          let error = err;
+          return [false, err];
+        } else {
+          return [false, "Unable to save appointment."];
+        }
       });
   }
 
