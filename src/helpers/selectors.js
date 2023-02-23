@@ -1,8 +1,8 @@
 /**
- * function getAppointmentsForDay()
+ * getAppointmentsForDay()
  * 
- * @param {*} state object
- * @param {*} day string
+ * @param {*} state 
+ * @param {*} day 
  * @returns 
  */
 export function getAppointmentsForDay(state, day) {

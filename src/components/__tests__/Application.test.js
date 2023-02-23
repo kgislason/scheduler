@@ -1,5 +1,5 @@
 import React from "react";
-import { render, getByText, getByAltText, getByPlaceholderText, getAllByTestId, queryByText, prettyDOM, cleanup, fireEvent, waitForElement } from "@testing-library/react";
+import { render, getByText, getByAltText, queryByAltText, getByPlaceholderText, getAllByTestId, queryByText, prettyDOM, cleanup, fireEvent, waitForElement } from "@testing-library/react";
 import Application from "components/Application";
 import Appointment from "components/Appointment";
 
@@ -35,8 +35,6 @@ describe("Application", () => {
     fireEvent.click(getByAltText(appointment, "Sylvia Palmer"));
   
     fireEvent.click(getByText(appointment, "Save"));
-  
-    console.log(prettyDOM(appointment));
 
     expect(getByText(appointment, "Saving")).toBeInTheDocument();
     
@@ -46,7 +44,85 @@ describe("Application", () => {
       queryByText(day, "Monday")
     );
 
-    expect(getByText(day, "1 spot remaining")).toBeInTheDocument();
+    expect(getByText(day, "no spots remaining")).toBeInTheDocument();
     
+  });
+
+  it("loads data, cancels an interview and increases the spots remaining for Monday by 1", async () => {
+    // 1. Render the Application.
+    const { container } = render(<Application />);
+  
+    // 2. Wait until the text "Archie Cohen" is displayed.
+    await waitForElement(() => getByText(container, "Archie Cohen"));
+  
+    // 3. Click the "Delete" button on the third appointment. 
+    const appointment = getAllByTestId(container, "appointment").find(
+      appointment => queryByText(appointment, "Archie Cohen")
+    );
+
+    fireEvent.click(queryByAltText(appointment, "Delete"));
+
+    // 4. Check that the confirmation message is shown.
+    expect(getByText(appointment, "Are you sure you would like to delete?")).toBeInTheDocument();
+
+    // 4. Click the "Confirm" button on that same appointment.
+
+    fireEvent.click(getByText(appointment, "Confirm"));
+
+    // 7. Check that the element with the text "Deleting" is displayed.
+
+    expect(getByText(appointment, "Deleting...")).toBeInTheDocument();
+
+    // Wait until the element with the "Add" button is displayed.
+
+    await waitForElement(() => queryByAltText(appointment, "Add"));
+
+    // 9. Check that the DayListItem with the text "Monday" also has the text "2 spots remaining". 
+
+    const day = getAllByTestId(container, "day").find(day =>
+      queryByText(day, "Monday")
+    );
+
+    expect(getByText(day, "1 spot remaining")).toBeInTheDocument();
+  });
+
+  it("loads data, edits an interview and keeps the spots remaining for Monday the same", async () => {
+
+    // 1. Render the Application.
+    const { container } = render(<Application />);
+  
+    // 2. Wait until the text "Archie Cohen" is displayed.
+    await waitForElement(() => getByText(container, "Archie Cohen"));
+  
+
+    const appointment = getAllByTestId(container, "appointment").find(
+      appointment => queryByText(appointment, "Archie Cohen")
+    );
+
+    // 3. Click the "Edit" button on the third appointment. 
+    fireEvent.click(queryByAltText(appointment, "Edit"));
+
+    // 4. Check that the Edit screen is is shown.
+    fireEvent.change(getByPlaceholderText(appointment, /enter student name/i), {
+      target: { value: "Archie Cohen" }
+    });
+
+    fireEvent.click(getByAltText(appointment, "Sylvia Palmer"));
+  
+    fireEvent.click(getByText(appointment, "Save"));
+
+    expect(getByText(appointment, "Saving")).toBeInTheDocument();
+    
+    await waitForElement(() => queryByText(appointment, "Archie Cohen"));
+  
+    // 9. Check that the DayListItem with the text "Monday" also has the text "1 spot remaining". 
+    const day = getAllByTestId(container, "day").find(day =>
+      queryByText(day, "Monday")
+    );
+
+    console.log(prettyDOM(day));
+   
+    expect(queryByText(day, "no spots remaining")).toBeInTheDocument();
+
   });
 });

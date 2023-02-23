@@ -38,12 +38,26 @@ export function useApplicationData(initial) {
       [id]: appointment
     };
 
+    // Update spots remaining inside state.days
+    const days = state.days;
+    let day = state.day;
+    let key;
+
+    for (let item in days) {
+      if (day === state.days[item]["name"]) {
+        key = item
+      };
+    }
+
+    let spots = days[key].spots - 1;
+    days[key].spots = spots;
+
     return axios.put(`/api/appointments/${id}`, appointment)
       .then( (res) => {
-        console.log(res);
         setState({
           ...state,
-          appointments
+          appointments,
+          days
         });
 
         return res;
@@ -74,17 +88,31 @@ export function useApplicationData(initial) {
       [id]: appointment
     };
 
+    // Update spots remaining inside state.days
+    const days = state.days;
+    let day = state.day;
+    let key;
+
+    for (let item in days) {
+      if (day === state.days[item]["name"]) {
+        key = item
+      };
+    }
+
+    let spots = days[key].spots + 1;
+    days[key].spots = spots;
+
     return axios.delete(`/api/appointments/${id}`)
       .then((res) => {
+        console.log("Response: ", res);
         setState({
           ...state,
-          appointments
+          appointments,
+          days
         });
-        console.log(res);
         return res;
       })
       .catch((err) => {
-        console.log(err);
         return err;
       });
   }
@@ -99,6 +127,7 @@ export function useApplicationData(initial) {
     })
     .catch((err) => {
       console.log("Error", err);
+      return err;
     });
   }, []);
 
