@@ -41,5 +41,12 @@ describe("Application", () => {
     expect(getByText(appointment, "Saving")).toBeInTheDocument();
     
     await waitForElement(() => queryByText(appointment, "Lydia Miller-Jones"));
+
+    const day = getAllByTestId(container, "day").find(day =>
+      queryByText(day, "Monday")
+    );
+
+    expect(getByText(day, "1 spot remaining")).toBeInTheDocument();
+    
   });
 });

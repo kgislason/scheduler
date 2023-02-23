@@ -88,8 +88,15 @@ export default {
       return Promise.resolve({
         status: 204,
         statusText: "No Content",
-        data: data,
-        callback: callback
+        data: data
+      });
+    }
+
+    if (url === "/api/appointments/1") {
+      return Promise.resolve({
+        status: 204,
+        statusText: "No Content",
+        data: data
       });
     }
   })
