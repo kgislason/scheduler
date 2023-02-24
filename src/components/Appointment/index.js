@@ -44,7 +44,6 @@ export default function Appointment(props) {
     // onComplete...
     props.bookInterview(props.id, interview)
       .then( (res) => {
-        console.log("Saved new inerview: ", res);
         if (res[0]) {
           transition(SHOW);
         } else {
@@ -62,7 +61,6 @@ export default function Appointment(props) {
     props.cancelInterview(id)
     .then( (res) => {
       if (res[0]) {
-        console.log("Cancel Interview Response: ", res[1]);
         transition(EMPTY);
       } else {
         setError(String(String(res[1])));

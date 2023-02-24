@@ -119,7 +119,7 @@ describe("Application", () => {
       queryByText(day, "Monday")
     );
 
-    console.log(prettyDOM(day));
+    (prettyDOM(day));
    
     expect(queryByText(day, "no spots remaining")).toBeInTheDocument();
 
@@ -149,8 +149,6 @@ describe("Application", () => {
 
     await waitForElement(() => queryByText(appointment, "Error"));
 
-    console.log(prettyDOM(appointment));
-
     fireEvent.click(getByAltText(appointment, "Close"));
 
     await waitForElement(() => queryByAltText(appointment, "Add"));
@@ -158,8 +156,6 @@ describe("Application", () => {
     const day = getAllByTestId(container, "day").find(day =>
       queryByText(day, "Monday")
     );
-
-    console.log(prettyDOM(day));
 
     expect(getByText(day, "no spots remaining")).toBeInTheDocument();
   });

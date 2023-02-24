@@ -63,7 +63,7 @@ export function useApplicationData(initial) {
         return [true, res];
       })
       .catch((err) => {
-        console.log("This: ", err);
+        console.log("Error message: ", err);
         return [false, err];
       });
   }
@@ -136,7 +136,7 @@ export function useApplicationData(initial) {
         setState(prev => ({...prev, days: all[0].data, appointments: all[1].data,interviewers: all[2].data}));
     })
     .catch((err) => {
-      console.log("Error", err);
+      console.log("Error Message: ", err);
       return err;
     });
   }, []);
