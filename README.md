@@ -63,11 +63,16 @@ npm run storybook
 
 There are Cypress tests avilable in this project that require connecting to a test database for the API.
 
+# Screenshots
+## Desktop Display
 
 !["Desktop"](https://github.com/kgislason/scheduler/blob/master/docs/scheduler-desktop.png?raw=true)
 
+## Mobile Display
+!["Mobile"](https://github.com/kgislason/scheduler/blob/master/docs/scheduler-mobile.png?raw=true)
+
+## Editing an Appointment
 !["Edit Appointment"](https://github.com/kgislason/scheduler/blob/master/docs/scheduler-edit.png?raw=true)
 
+## Delete Confirmation Message
 !["Delete Appointment Confirmation"](https://github.com/kgislason/scheduler/blob/master/docs/delete.png?raw=true)
-
-!["Mobile"](https://github.com/kgislason/scheduler/blob/master/docs/scheduler-mobile.png?raw=true)

@@ -1,21 +1,37 @@
-import { useState, useEffect } from 'react'
-import axios from 'axios'
+import { useState, useEffect } from "react";
+import axios from "axios";
+
+/**
+ * useApplicationData
+ *
+ * Description: Manages state for our app inside an object
+ * Includes state for: day, days, appointments, interviewers
+ *
+ * functions: setDay(), bookInterview(), cancelInterview
+ * @param {*} initial
+ *
+ */
 
 export function useApplicationData (initial) {
   // UseState
   const [state, setState] = useState({
-    day: 'Monday',
+    day: "Monday",
     days: [],
     appointments: {},
-    interviewers: []
-  })
+    interviewers: [],
+  });
 
-  // Functions
+  /**
+   * setDay()
+   *
+   * Change state of day inside status object
+   * @param {*} day
+   */
   function setDay (day) {
     setState({
       ...state,
-      day
-    })
+      day,
+    });
   }
 
   /**
@@ -29,36 +45,37 @@ export function useApplicationData (initial) {
   const bookInterview = (id, interview) => {
     const appointment = {
       ...state.appointments[id],
-      interview: { ...interview }
-    }
+      interview: { ...interview },
+    };
 
     const appointments = {
       ...state.appointments,
-      [id]: appointment
-    }
-    // console.log("id: ", id);
-    // console.log("State: ", Object.values(state.appointments).find( item => { return item.id === id }) );
+      [id]: appointment,
+    };
 
-    const interviewObj = Object.values(state.appointments).find( item => { return item.id === id });
+    // Get the current insterview object status
+    const interviewObj = Object.values(state.appointments).find(item => {
+      return item.id === id;
+    });
 
-    console.log(interviewObj.interview);
-
-    // Update spots remaining inside state.days
-    const days = state.days
-    let day = state.day
-    let key
+    // Update spots remaining inside state.days for new appointments
+    const days = state.days;
+    let day = state.day;
+    let key;
 
     for (let item in days) {
-      if (day === state.days[item]['name']) {
-        key = item
+      // if interviewObj is null, then we are creating a new appointment
+      // we need to update spots remaining
+      if (day === state.days[item]["name"]) {
+        key = item;
       }
     }
 
-    let spots = days[key].spots - 1
-    if (!interviewObj.interview) {      
-      days[key].spots = spots
+    let spots = days[key].spots - 1;
+    if (!interviewObj.interview) {
+      days[key].spots = spots;
     }
- 
+
     return axios
       .put(`/api/appointments/${id}`, appointment)
       .then(res => {
@@ -68,22 +85,22 @@ export function useApplicationData (initial) {
         setState({
           ...state,
           appointments,
-          days
-        })
+          days,
+        });
 
-        return [true, res]
+        return [true, res];
       })
       .catch(err => {
         if (err) {
-          console.log('Error message: ', err)
-          return [false, err]
+          console.log("Error message: ", err);
+          return [false, err];
         } else {
-          let errorMsg = 'Error. Unable to delete appointment.'
-          console.log('Error message: ', errorMsg)
-          return [false, errorMsg]
+          let errorMsg = "Error. Unable to delete appointment.";
+          console.log("Error message: ", errorMsg);
+          return [false, errorMsg];
         }
-      })
-  }
+      });
+  };
 
   /**
    * Cancel Interview (Delete)
@@ -98,78 +115,79 @@ export function useApplicationData (initial) {
   const cancelInterview = id => {
     const appointment = {
       ...state.appointments[id],
-      interview: null
-    }
+      interview: null,
+    };
 
     const appointments = {
       ...state.appointments,
-      [id]: appointment
-    }
+      [id]: appointment,
+    };
 
-    // Update spots remaining inside state.days
-    const days = state.days
-    let day = state.day
-    let key
+    // Update spots remaining inside state.days for new appointments
+    // Do nothing for editing existing appointments
+    const days = state.days;
+    let day = state.day;
+    let key;
 
     for (let item in days) {
-      if (day === state.days[item]['name']) {
-        key = item
+      if (day === state.days[item]["name"]) {
+        key = item;
       }
     }
-    console.log('Spots: ', days[key].spots)
-    let spots = days[key].spots + 1
-    console.log('Spots: ', spots)
-    days[key].spots = spots
+    console.log("Spots: ", days[key].spots);
+    let spots = days[key].spots + 1;
+    console.log("Spots: ", spots);
+    days[key].spots = spots;
 
     return axios
       .delete(`/api/appointments/${id}`)
       .then(res => {
-        console.log('Response: ', res)
+        console.log("Response: ", res);
         setState({
           ...state,
           appointments,
-          days
-        })
+          days,
+        });
         if (res !== undefined) {
-          return [true, res]
+          return [true, res];
         } else {
-          return [true, 'Response ok.']
+          return [true, "Response ok."];
         }
       })
       .catch(err => {
         if (err !== undefined) {
-          return [false, err]
+          return [false, err];
         } else {
-          let errMessage = 'Error. Unable to save appointment.'
-          return [false, errMessage]
+          let errMessage = "Error. Unable to save appointment.";
+          return [false, errMessage];
         }
-      })
-  }
+      });
+  };
 
   useEffect(() => {
     Promise.all([
-      axios.get('/api/days'),
-      axios.get('/api/appointments'),
-      axios.get('/api/interviewers')
+      axios.get("/api/days"),
+      axios.get("/api/appointments"),
+      axios.get("/api/interviewers"),
     ])
       .then(all => {
         setState(prev => ({
           ...prev,
           days: all[0].data,
           appointments: all[1].data,
-          interviewers: all[2].data
-        }))
+          interviewers: all[2].data,
+        }));
       })
       .catch(err => {
-        console.log('Error Message: ', err)
-        return err
-      })
-  }, [])
+        console.log("Error Message: ", err);
+        return err;
+      });
+  }, []);
 
   return {
     state,
     setDay,
     bookInterview,
-    cancelInterview
-  }
+    cancelInterview,
+  };
 }
