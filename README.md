@@ -21,3 +21,7 @@ npm test
 ```sh
 npm run storybook
 ```
+
+## Running Cypress
+
+There are Cypress tests avilable in this project that require connecting to a test database for the API.

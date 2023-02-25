@@ -119,7 +119,6 @@ export function useApplicationData(initial) {
       })
       .catch((err) => {
         if (err !== undefined) {
-          let error = err;
           return [false, err];
         } else {
           return [false, "Unable to save appointment."];
