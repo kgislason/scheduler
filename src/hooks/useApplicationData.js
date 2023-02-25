@@ -79,7 +79,6 @@ export function useApplicationData (initial) {
     return axios
       .put(`/api/appointments/${id}`, appointment)
       .then(res => {
-        console.log(appointment);
         console.log("Response", res);
 
         setState({
@@ -134,9 +133,7 @@ export function useApplicationData (initial) {
         key = item;
       }
     }
-    console.log("Spots: ", days[key].spots);
     let spots = days[key].spots + 1;
-    console.log("Spots: ", spots);
     days[key].spots = spots;
 
     return axios
