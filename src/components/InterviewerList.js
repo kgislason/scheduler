@@ -6,13 +6,13 @@ import "components/InterviewerList.scss";
 function InterviewerList(props) {
   const interviewersData = Object.keys(props.interviewers).map(ind => {
     let id = props.interviewers[ind].id;
-    return (   
+    return (
       <InterviewerListItem
         key={props.interviewers[ind].id}
         name={props.interviewers[ind].name}
         avatar={props.interviewers[ind].avatar}
         selected={id === props.value}
-        setInterviewer={() => props.onChange(props.interviewers[ind].id) }
+        setInterviewer={() => props.onChange(props.interviewers[ind].id)}
       />
     );
   });
