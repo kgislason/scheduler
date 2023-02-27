@@ -5,14 +5,14 @@ function useVisualMode (initial) {
   const [history, setHistory] = useState([initial]);
 
   function transition (newMode, replace = false) {
-    const arr = history;
+    const newHistory = [...history];
 
     if (replace) {
-      arr.pop();
+      newHistory.pop();
     }
 
-    arr.push(newMode);
-    setHistory(arr);
+    newHistory.push(newMode);
+    setHistory(newHistory);
     setMode(newMode);
   }
 
@@ -21,10 +21,9 @@ function useVisualMode (initial) {
       return;
     }
 
-    const arr = history;
-    arr.pop();
-    setHistory(arr);
-    setMode(arr[arr.length - 1]);
+    const newHistory = [...history].pop();
+    setHistory(newHistory);
+    setMode(newHistory[newHistory.length - 1]);
   }
 
   return {
