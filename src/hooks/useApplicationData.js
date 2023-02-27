@@ -136,12 +136,7 @@ export function useApplicationData (initial) {
         }
       })
       .catch(err => {
-        if (err !== undefined) {
           return [false, err];
-        } else {
-          let errMessage = "Error. Unable to save appointment.";
-          return [false, errMessage];
-        }
       });
   };
 
