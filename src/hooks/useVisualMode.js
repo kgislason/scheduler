@@ -15,7 +15,6 @@ function useVisualMode (initial) {
 
     setHistory(newHistory);
     setMode(newMode);
-    console.log(history);
   }
 
   function back () {
@@ -27,7 +26,6 @@ function useVisualMode (initial) {
     newHistory.pop();
     setHistory(newHistory);
     setMode(newHistory[newHistory.length - 1]);
-    console.log(history);
   }
 
   return {
