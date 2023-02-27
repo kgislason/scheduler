@@ -129,11 +129,8 @@ export function useApplicationData (initial) {
           appointments,
           days,
         });
-        if (res !== undefined) {
-          return [true, res];
-        } else {
-          return [true, "Response ok."];
-        }
+        
+        return [true, res];
       })
       .catch(err => {
           return [false, err];
