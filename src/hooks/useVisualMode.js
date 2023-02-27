@@ -21,7 +21,8 @@ function useVisualMode (initial) {
       return;
     }
 
-    const newHistory = [...history].pop();
+    const newHistory = [...history];
+    newHistory.pop();
     setHistory(newHistory);
     setMode(newHistory[newHistory.length - 1]);
   }
