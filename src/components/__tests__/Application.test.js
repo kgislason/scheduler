@@ -7,7 +7,6 @@ import {
   getByPlaceholderText,
   getAllByTestId,
   queryByText,
-  prettyDOM,
   cleanup,
   fireEvent,
   waitForElement,
@@ -156,7 +155,6 @@ describe("Application", () => {
 
     await waitForElement(() => getByText(container, "Archie Cohen"));
 
-    // 3. Click the "Delete" button on the third appointment.
     const appointment = getAllByTestId(container, "appointment").find(
       appointment => queryByText(appointment, "Archie Cohen")
     );

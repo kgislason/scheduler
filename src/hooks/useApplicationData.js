@@ -13,7 +13,6 @@ import axios from "axios";
  */
 
 export function useApplicationData (initial) {
-  // UseState
   const [state, setState] = useState({
     day: "Monday",
     days: [],
@@ -53,19 +52,15 @@ export function useApplicationData (initial) {
       [id]: appointment,
     };
 
-    // Get the current insterview object status
     const interviewObj = Object.values(state.appointments).find(item => {
       return item.id === id;
     });
 
-    // Update spots remaining inside state.days for new appointments
     const days = state.days;
     let day = state.day;
     let key;
 
     for (let item in days) {
-      // if interviewObj is null, then we are creating a new appointment
-      // we need to update spots remaining
       if (day === state.days[item]["name"]) {
         key = item;
       }
@@ -114,8 +109,6 @@ export function useApplicationData (initial) {
       [id]: appointment,
     };
 
-    // Update spots remaining inside state.days for new appointments
-    // Do nothing for editing existing appointments
     const days = state.days;
     let day = state.day;
     let key;

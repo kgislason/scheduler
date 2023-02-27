@@ -3,10 +3,9 @@
  * 
  * @param {*} state 
  * @param {*} day 
- * @returns 
+ * @returns an array of appointments for that day
  */
 export function getAppointmentsForDay(state, day) {
-  //... returns an array of appointments for that day
   const days = state.days;
   let apptIDs = [];
   const output = [];
@@ -23,11 +22,18 @@ export function getAppointmentsForDay(state, day) {
   return output;
 }
 
+/**
+ * 
+ * getInterview()
+ * 
+ * @param {} state Object
+ * @param {*} interview Object
+ * @returns 
+ */
+
 export function getInterview(state, interview) {
-  // Start with the interview object
   const output = interview;
 
-  // Take the id and rewrite to be an object with interviewer data
   if ( !interview ) {
     return null;
   }
@@ -48,19 +54,17 @@ export function getInterview(state, interview) {
  * @param {*} day String
  * @returns an array of appointment for the selected day
  */
+
 export function getInterviewersForDay(state, day) {
   let intIDs = [];
   const output = [];
 
-  // Filter the state object by surrent day
   const selectedDay = state.days.filter( item => item["name"] === day );
 
-  // Extract the Interviewer IDS
   if (selectedDay.length > 0) {
     intIDs = selectedDay[0]["interviewers"];
   }
 
-  // Build them into interviewer objects for the day
   for (const key of intIDs) {
     output.push(state.interviewers[key]);
   }

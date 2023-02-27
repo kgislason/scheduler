@@ -9,7 +9,6 @@ import Status from "./Status";
 import Confirm from "./Confirm";
 import Error from "./Error";
 
-// Constants
 const EMPTY = "EMPTY";
 const SHOW = "SHOW";
 const CREATE = "CREATE";
@@ -21,15 +20,23 @@ const ERROR_SAVE = "ERROR_SAVE";
 const ERROR_DELETE = "ERROR_DELETE";
 
 export default function Appointment (props) {
-  // We set the error message if there is an error to pass to the <Error />
   const [error, setError] = useState("");
 
-  // Manage how the user moves through the application
   const { mode, transition, back } = useVisualMode(
     props.interview ? SHOW : EMPTY
   );
 
-  // Handle Saving of the Form
+  /**
+   * save()
+   * 
+   * Description: Handle Saving of the Form:
+   * transition to SAVING
+   * Calls the bookInterview function
+   * Error handling
+   * 
+   * @param {*} name 
+   * @param {*} interviewer 
+   */
   const save = (name, interviewer) => {
     setError("");
     const interview = {
@@ -39,7 +46,6 @@ export default function Appointment (props) {
 
     transition(SAVING, true);
 
-    // onComplete...
     props.bookInterview(props.id, interview).then(res => {
       if (res[0]) {
         transition(SHOW);
@@ -50,7 +56,14 @@ export default function Appointment (props) {
     });
   };
 
-  // Handle Deleting of an appointment (after confirmation)
+  /**
+   * handleConfirmDelete()
+   * 
+   * Description: Handles deleting of an appointment after confirmation
+   * transitions to Deleting, error handling
+   * 
+   * @param {*} id 
+   */
   const handleConfirmDelete = id => {
     transition(DELETING, true);
     setError("");
@@ -63,9 +76,6 @@ export default function Appointment (props) {
         transition(ERROR_DELETE, true);
       }
     });
-
-    // TO DO
-    // Handle ERRORS
   };
 
   return (

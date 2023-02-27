@@ -21,7 +21,6 @@ function useVisualMode (initial) {
       return;
     }
 
-    // Continue if not on intial mode
     let arr = history;
     arr.pop();
     setHistory(arr);
