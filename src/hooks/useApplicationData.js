@@ -33,6 +33,46 @@ export function useApplicationData (initial) {
     });
   }
 
+  useEffect(() => {
+    Promise.all([
+      axios.get("/api/days"),
+      axios.get("/api/appointments"),
+      axios.get("/api/interviewers"),
+    ])
+      .then(all => {
+        setState(prev => ({
+          ...prev,
+          days: all[0].data,
+          appointments: all[1].data,
+          interviewers: all[2].data,
+        }));
+      })
+      .catch(err => {
+        console.log("Error Message: ", err);
+        return err;
+      });
+  }, []);
+
+  /**
+   * Update spots remaining
+   * 
+   */
+
+  const updateSpotsRemaining = (id, increment) => {
+    const days = state.days;
+    let key;
+
+    for (const index in days) {
+      if (state.day === days[index].name) {
+        key = index;
+      }
+    }
+
+    days[key].spots = days[key].spots + increment;
+
+    return days;
+  }
+
   /**
    * bookInterview
    *
@@ -52,23 +92,14 @@ export function useApplicationData (initial) {
       [id]: appointment,
     };
 
+    let days = state.days;
+
     const interviewObj = Object.values(state.appointments).find(item => {
       return item.id === id;
     });
 
-    const days = state.days;
-    let day = state.day;
-    let key;
-
-    for (let item in days) {
-      if (day === state.days[item]["name"]) {
-        key = item;
-      }
-    }
-
-    let spots = days[key].spots - 1;
     if (!interviewObj.interview) {
-      days[key].spots = spots;
+      days = updateSpotsRemaining(id, -1);
     }
 
     return axios
@@ -109,17 +140,7 @@ export function useApplicationData (initial) {
       [id]: appointment,
     };
 
-    const days = state.days;
-    let day = state.day;
-    let key;
-
-    for (let item in days) {
-      if (day === state.days[item]["name"]) {
-        key = item;
-      }
-    }
-    let spots = days[key].spots + 1;
-    days[key].spots = spots;
+    const days = updateSpotsRemaining(id, 1);
 
     return axios
       .delete(`/api/appointments/${id}`)
@@ -136,26 +157,6 @@ export function useApplicationData (initial) {
           return [false, err];
       });
   };
-
-  useEffect(() => {
-    Promise.all([
-      axios.get("/api/days"),
-      axios.get("/api/appointments"),
-      axios.get("/api/interviewers"),
-    ])
-      .then(all => {
-        setState(prev => ({
-          ...prev,
-          days: all[0].data,
-          appointments: all[1].data,
-          interviewers: all[2].data,
-        }));
-      })
-      .catch(err => {
-        console.log("Error Message: ", err);
-        return err;
-      });
-  }, []);
 
   return {
     state,

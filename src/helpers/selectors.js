@@ -39,7 +39,7 @@ export function getInterview(state, interview) {
   }
   const interviewerID = output.interviewer;
 
-  for (let item of Object.keys(state.interviewers)) {
+  for (const item of Object.keys(state.interviewers)) {
     if (state.interviewers[item]["id"] === interviewerID) {
       output.interviewer = state.interviewers[item];
     }

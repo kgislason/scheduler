@@ -5,7 +5,7 @@ import "components/InterviewerList.scss";
 
 function InterviewerList (props) {
   const interviewersData = Object.keys(props.interviewers).map(ind => {
-    let id = props.interviewers[ind].id;
+    const id = props.interviewers[ind].id;
     return (
       <InterviewerListItem
         key={props.interviewers[ind].id}

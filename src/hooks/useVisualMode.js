@@ -5,7 +5,7 @@ function useVisualMode (initial) {
   const [history, setHistory] = useState([initial]);
 
   function transition (newMode, replace = false) {
-    let arr = history;
+    const arr = history;
 
     if (replace) {
       arr.pop();
@@ -21,7 +21,7 @@ function useVisualMode (initial) {
       return;
     }
 
-    let arr = history;
+    const arr = history;
     arr.pop();
     setHistory(arr);
     setMode(arr[arr.length - 1]);
