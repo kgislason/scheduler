@@ -79,8 +79,6 @@ export function useApplicationData (initial) {
     return axios
       .put(`/api/appointments/${id}`, appointment)
       .then(res => {
-        console.log("Response", res);
-
         setState({
           ...state,
           appointments,
@@ -90,14 +88,8 @@ export function useApplicationData (initial) {
         return [true, res];
       })
       .catch(err => {
-        if (err) {
           console.log("Error message: ", err);
           return [false, err];
-        } else {
-          let errorMsg = "Error. Unable to delete appointment.";
-          console.log("Error message: ", errorMsg);
-          return [false, errorMsg];
-        }
       });
   };
 
@@ -139,7 +131,6 @@ export function useApplicationData (initial) {
     return axios
       .delete(`/api/appointments/${id}`)
       .then(res => {
-        console.log("Response: ", res);
         setState({
           ...state,
           appointments,
