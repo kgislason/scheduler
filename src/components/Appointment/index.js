@@ -111,7 +111,7 @@ export default function Appointment (props) {
       )}
       {mode === SAVING && <Status message="Saving" />}
       {mode === ERROR_SAVE && (
-        <Error message={error} onClose={() => back(EMPTY)} />
+        <Error message={error} onClose={back} />
       )}
       {mode === DELETING && <Status message="Deleting..." />}
       {mode === ERROR_DELETE && (
