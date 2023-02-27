@@ -44,16 +44,17 @@ export default function Appointment (props) {
       interviewer,
     };
 
-    transition(SAVING, true);
+    transition(SAVING);
 
-    props.bookInterview(props.id, interview).then(res => {
-      if (res[0]) {
-        transition(SHOW);
-      } else {
-        setError(String(String(res[1])));
-        transition(ERROR_SAVE, true);
-      }
-    });
+    props.bookInterview(props.id, interview)
+      .then(res => {
+        if (res[0]) {
+          transition(SHOW);
+        } else {
+          setError(String(String(res[1])));
+          transition(ERROR_SAVE, true);
+        }
+      });
   };
 
   /**
@@ -111,7 +112,7 @@ export default function Appointment (props) {
       )}
       {mode === SAVING && <Status message="Saving" />}
       {mode === ERROR_SAVE && (
-        <Error message={error} onClose={back} />
+        <Error message={error} onClose={() => transition(CREATE, true)} />
       )}
       {mode === DELETING && <Status message="Deleting..." />}
       {mode === ERROR_DELETE && (
