@@ -48,12 +48,11 @@ export default function Appointment (props) {
 
     props.bookInterview(props.id, interview)
       .then(res => {
-        if (res[0]) {
-          transition(SHOW);
-        } else {
-          setError(String(String(res[1])));
-          transition(ERROR_SAVE, true);
-        }
+        transition(SHOW);
+      })
+      .catch(() => {
+        setError("Error: Unable to save interview.");
+        transition(ERROR_SAVE, true);
       });
   };
 
@@ -66,17 +65,17 @@ export default function Appointment (props) {
    * @param {*} id 
    */
   const handleConfirmDelete = id => {
-    transition(DELETING, true);
     setError("");
+    transition(DELETING);
 
-    props.cancelInterview(id).then(res => {
-      if (res[0]) {
-        transition(EMPTY);
-      } else {
-        setError(String(String(res[1])));
+    props.cancelInterview(id)
+      .then(res => {
+        transition(EMPTY);      
+      })
+      .catch(() => {
+        setError("Error: Unable to cancel interview.");
         transition(ERROR_DELETE, true);
-      }
-    });
+      });
   };
 
   return (
@@ -112,7 +111,7 @@ export default function Appointment (props) {
       )}
       {mode === SAVING && <Status message="Saving" />}
       {mode === ERROR_SAVE && (
-        <Error message={error} onClose={() => transition(CREATE, true)} />
+        <Error message={error} onClose={back} />
       )}
       {mode === DELETING && <Status message="Deleting..." />}
       {mode === ERROR_DELETE && (

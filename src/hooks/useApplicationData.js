@@ -55,7 +55,7 @@ export function useApplicationData (initial) {
 
   /**
    * Update spots remaining
-   * 
+   *
    */
 
   const updateSpotsRemaining = (id, increment) => {
@@ -71,7 +71,7 @@ export function useApplicationData (initial) {
     days[key].spots = days[key].spots + increment;
 
     return days;
-  }
+  };
 
   /**
    * bookInterview
@@ -102,21 +102,13 @@ export function useApplicationData (initial) {
       days = updateSpotsRemaining(id, -1);
     }
 
-    return axios
-      .put(`/api/appointments/${id}`, appointment)
-      .then(res => {
-        setState({
-          ...state,
-          appointments,
-          days,
-        });
-
-        return [true, res];
-      })
-      .catch(err => {
-          console.log("Error message: ", err);
-          return [false, err];
+    return axios.put(`/api/appointments/${id}`, appointment).then(res => {
+      setState({
+        ...state,
+        appointments,
+        days,
       });
+    });
   };
 
   /**
@@ -142,20 +134,13 @@ export function useApplicationData (initial) {
 
     const days = updateSpotsRemaining(id, 1);
 
-    return axios
-      .delete(`/api/appointments/${id}`)
-      .then(res => {
-        setState({
-          ...state,
-          appointments,
-          days,
-        });
-        
-        return [true, res];
-      })
-      .catch(err => {
-          return [false, err];
+    return axios.delete(`/api/appointments/${id}`).then(res => {
+      setState({
+        ...state,
+        appointments,
+        days,
       });
+    });
   };
 
   return {
