@@ -10,6 +10,7 @@ import {
   cleanup,
   fireEvent,
   waitForElement,
+  prettyDOM,
 } from "@testing-library/react";
 import axios from "axios";
 import Application from "components/Application";
@@ -139,7 +140,7 @@ describe("Application", () => {
 
     fireEvent.click(getByAltText(appointment, "Close"));
 
-    await waitForElement(() => queryByAltText(appointment, "Add"));
+    await waitForElement(() => getByText(appointment, "Save"));
 
     const day = getAllByTestId(container, "day").find(day =>
       queryByText(day, "Monday")
