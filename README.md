@@ -1,6 +1,6 @@
 # Interview Scheduler
 
-Single-page React application that allows students to book and and cancel tech interviews between student and mentor. Interview appointments are available between 12PM and 5PM, Monday to Friday and each appointment has one student and one interviewer. The front end app makes requests to an API for fetching and sotring appointment data from a database.
+Single-page React application that allows students to book and and cancel tech interviews between student and mentor. Interview appointments are available between 12PM and 5PM, Monday to Friday and each appointment has one student and one interviewer. The front end app makes requests to an API for fetching appointment data from a database.
 
 # Dependencies
 - Node version v12.x.x (Vagrant & WSL) or v15.x.x (M1 Mac).
